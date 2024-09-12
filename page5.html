@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <h1 style="text-align:center">myVote.com</h1><hr>
+    </header>
+    <h2>Result</h2> <hr align="left" width="40%">
+    <table>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <h3 id="winnerDisplay"></h3>
+
+    <script>
+        const allPollOptions = JSON.parse(localStorage.getItem("allPollOptions")) || [];
+        const firstColumnCells = document.querySelectorAll('table tr td:first-child');
+        const secondColumnCells = document.querySelectorAll('table tr td:nth-child(2)');
+        const values = [];
+
+        allPollOptions.forEach((option, index) => {
+            if (firstColumnCells[index]) {
+                firstColumnCells[index].textContent = option;
+                const randomValue = Math.floor(Math.random() * 100) + 1;
+                values.push(randomValue);
+                if (secondColumnCells[index]) {
+                    secondColumnCells[index].textContent = randomValue;
+                }
+            }
+        });
+
+        const maxValue = Math.max(...values);
+        const winnerIndex = values.indexOf(maxValue);
+        const winner = allPollOptions[winnerIndex];
+        document.getElementById("winnerDisplay").textContent = `The winner is ${winner} with ${maxValue} votes!`;
+    </script>
+</body>
+</html>

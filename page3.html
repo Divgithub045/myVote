@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Poll</title>
+    <style>
+        
+header {
+    width: 100vw;
+    height: 10vh;
+    border: 1px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+}
+header h1
+{
+    margin: 30px;
+}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #28a7a7;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #214788;
+        }
+
+        .option-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .option-group input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .remove-option {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .remove-option:hover {
+            background-color: #c82333;
+        }
+
+        .add-option {
+            background-color: #8eb8e4;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .add-option:hover {
+            background-color: #9ccafc;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>myVote.com</h1>
+        <hr>
+    </header>
+    <div class="container">
+        <h2>Create a Poll</h2>
+        <form id="pollForm">
+            <div class="form-group">
+                <label for="pollTitle">Poll Title</label>
+                <input type="text" id="pollTitle" name="pollTitle" placeholder="Enter the poll title" required>
+            </div>
+
+            <div id="optionsContainer">
+                <div class="form-group option-group">
+                    <input type="text" name="pollOption[]" placeholder="Enter option 1" required>
+                    <button type="button" class="remove-option" onclick="removeOption(this)">X</button>
+                </div>
+                <div class="form-group option-group">
+                    <input type="text" name="pollOption[]" placeholder="Enter option 2" required>
+                    <button type="button" class="remove-option" onclick="removeOption(this)">X</button>
+                </div>
+            </div>
+
+            <button type="button" class="add-option" onclick="addOption()">Add Option</button>
+
+            <div class="form-group">
+                <input type="submit" value="Create Poll">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function addOption() {
+            const optionsContainer = document.getElementById('optionsContainer');
+            const optionCount = optionsContainer.getElementsByClassName('option-group').length + 1;
+            const optionHTML = `
+                <div class="form-group option-group">
+                    <input type="text" name="pollOption[]" placeholder="Enter option ${optionCount}" required>
+                    <button type="button" class="remove-option" onclick="removeOption(this)">X</button>
+                </div>
+            `;
+            optionsContainer.insertAdjacentHTML('beforeend', optionHTML);
+        }
+
+        function removeOption(button) {
+            const optionGroup = button.parentElement;
+            optionGroup.remove();
+        }
+
+        document.getElementById('pollForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+
+            const pollTitle = document.getElementById('pollTitle').value;
+            const pollOptions = Array.from(document.querySelectorAll('input[name="pollOption[]"]')).map(option => option.value);
+
+            if (pollTitle.trim() === '' || pollOptions.length < 2) {
+                alert('Please provide a title and at least two options.');
+                return;
+            }
+
+           localStorage.setItem('pollTitle', pollTitle);
+           pollOptions.forEach((option, index) => {
+            localStorage.setItem(`pollOption${index}`, option);
+        });
+    
+        alert('Poll Created Successfully!');
+        location.href = "vote.html";
+        });
+    </script>
+</body>
+</html>
